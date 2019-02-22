@@ -1,6 +1,7 @@
 package com.example.beijingnews;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -10,8 +11,13 @@ import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.beijingnews.activity.GuideActivity;
+import com.example.beijingnews.utils.CacheUtils;
+
 public class SplashActivity extends Activity {
 
+    // static constance
+    public static final String ENTER_MAIN = "enter_main";
     private RelativeLayout rl_splash_root;
 
     @Override
@@ -67,7 +73,22 @@ public class SplashActivity extends Activity {
         @Override
         public void onAnimationEnd(Animation animation) {
 
-            Toast.makeText(SplashActivity.this,"动画播放完成了", Toast.LENGTH_SHORT).show();
+            // judge if had entered the main page
+            boolean isEnterMain = CacheUtils.getBoolean(SplashActivity.this, ENTER_MAIN);
+
+            if(isEnterMain){
+                // if had, enter the main page
+
+            }else {
+                // if not, enter the guide page
+                Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
+                startActivity(intent);
+            }
+
+            // close SplashActivity
+            finish();
+
+//            Toast.makeText(SplashActivity.this,"动画播放完成了", Toast.LENGTH_SHORT).show();
         }
 
         /**
