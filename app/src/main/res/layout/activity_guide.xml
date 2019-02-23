@@ -13,6 +13,7 @@
 
     <Button
         android:id="@+id/btn_enter_main"
+        android:visibility="gone"
         android:background="@drawable/btn_enter_main_selector"
         android:textColor="@drawable/btn_enter_main_textcolor_selector"
         android:text="开始体验"
@@ -41,8 +42,8 @@
         <ImageView
             android:id="@+id/iv_red_point"
             android:background="@drawable/point_red"
-            android:layout_width="30px"
-            android:layout_height="30px" />
+            android:layout_width="10dp"
+            android:layout_height="10dp" />
 
     </RelativeLayout>
 

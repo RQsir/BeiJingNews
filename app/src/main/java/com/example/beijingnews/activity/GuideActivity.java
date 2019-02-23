@@ -1,24 +1,31 @@
 package com.example.beijingnews.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.beijingnews.R;
+import com.example.beijingnews.SplashActivity;
+import com.example.beijingnews.utils.CacheUtils;
+import com.example.beijingnews.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuideActivity extends Activity {
 
+    private static final String TAG = GuideActivity.class.getSimpleName();
     private ViewPager viewpager;
     private Button btn_enter_main;
     private LinearLayout ll_point_group;
@@ -29,6 +36,7 @@ public class GuideActivity extends Activity {
      * the distance between two red points
      */
     private int leftMax;
+    private int pxValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class GuideActivity extends Activity {
                 R.drawable.guide_2,
                 R.drawable.guide_3
         };
+        pxValue = DensityUtil.dip2px(GuideActivity.this,10);
 
         imageViews = new ArrayList<ImageView>();
         for (int i=0; i<ids.length; i++){
@@ -62,9 +71,9 @@ public class GuideActivity extends Activity {
             /**
              * unit is pixel, need to fit in later
              */
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(30,30);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pxValue,pxValue);
             if(i != 0){
-                params.leftMargin = 30;
+                params.leftMargin = pxValue;
             }
             point.setLayoutParams(params);
             // add to LinearLayout
@@ -82,6 +91,21 @@ public class GuideActivity extends Activity {
         // get the sliding percentage of screen
         viewpager.addOnPageChangeListener(new MyOnPageChangeListener());
 
+        // invoke when the btn_enter_main is pressed
+        btn_enter_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 1.storage the cache whether had entered the main page
+                CacheUtils.putBoolean(GuideActivity.this, SplashActivity.ENTER_MAIN, true);
+
+                // 2.jump to the main page
+                Intent intent = new Intent(GuideActivity.this,MainActivity.class);
+                startActivity(intent);
+
+                // 3.close the guide page
+                finish();
+            }
+        });
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -95,6 +119,17 @@ public class GuideActivity extends Activity {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            // sliding distance of 2 redPoint = positionOffset * max distance of 2 redPoint
+            int leftMargin = (int) (positionOffset * leftMax);
+//            Log.e(TAG,"position=="+position+",positionOffset=="+positionOffset+",positionOffsetPixels=="+positionOffsetPixels+",leftMax=="+leftMax);
+
+            // coordinate of sliding red point = the position of initial point + sliding distance
+            leftMargin = (int) (position * leftMax + positionOffset * leftMax);
+
+            // params.leftMargin = coordinate of sliding red point
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv_red_point.getLayoutParams();
+            params.leftMargin = leftMargin;
+            iv_red_point.setLayoutParams(params);
         }
 
         /**
@@ -104,6 +139,13 @@ public class GuideActivity extends Activity {
         @Override
         public void onPageSelected(int position) {
 
+            if(position == imageViews.size()-1){
+                // when the last page is selected, show the btn_enter
+                btn_enter_main.setVisibility(View.VISIBLE);
+            }else{
+                // other pages
+                btn_enter_main.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -124,7 +166,7 @@ public class GuideActivity extends Activity {
             iv_red_point.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
             // margin of the red point = the 2th black point position - the 1th black point position
-            leftMax  = ll_point_group.getChildAt(1).getLeft() - ll_point_group.getChildAt(2).getLeft();
+            leftMax  = ll_point_group.getChildAt(1).getLeft() - ll_point_group.getChildAt(0).getLeft();
         }
     }
 
