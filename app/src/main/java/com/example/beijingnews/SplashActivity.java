@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.beijingnews.activity.GuideActivity;
+import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.utils.CacheUtils;
 
 public class SplashActivity extends Activity {
@@ -76,14 +77,16 @@ public class SplashActivity extends Activity {
             // judge if had entered the main page
             boolean isEnterMain = CacheUtils.getBoolean(SplashActivity.this, ENTER_MAIN);
 
+            Intent intent;
             if(isEnterMain){
                 // if had, enter the main page
-
+                intent = new Intent(SplashActivity.this, MainActivity.class);
             }else {
                 // if not, enter the guide page
-                Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
-                startActivity(intent);
+                intent = new Intent(SplashActivity.this, GuideActivity.class);
             }
+            startActivity(intent);
+
 
             // close SplashActivity
             finish();
