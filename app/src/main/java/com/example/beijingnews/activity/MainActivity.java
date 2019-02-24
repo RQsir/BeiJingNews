@@ -2,13 +2,20 @@ package com.example.beijingnews.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.example.beijingnews.R;
+import com.example.beijingnews.fragment.ContentFragment;
+import com.example.beijingnews.fragment.LeftMenuFragment;
 import com.example.beijingnews.utils.DensityUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
+
+    public static final String MAIN_CONTENT_TAG = "main_content_tag";
+    public static final String LEFTMENU_TAG = "leftmenu_tag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,5 +39,25 @@ public class MainActivity extends SlidingFragmentActivity {
 
         // 6.configure the width of the mainPage while sliding
         slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this,200));
+
+
+        // init Fragment
+        initFragment();
+    }
+
+    private void initFragment() {
+
+        // 1.access FragmentManager
+        FragmentManager fm = getSupportFragmentManager();
+
+        // 2.start transaction
+        FragmentTransaction ft = fm.beginTransaction();
+
+        // 3.substitution
+        ft.replace(R.id.fl_main_content,new ContentFragment(), MAIN_CONTENT_TAG);
+        ft.replace(R.id.fl_leftmenu,new LeftMenuFragment(), LEFTMENU_TAG);
+
+        // 4.commit
+        ft.commit();
     }
 }
