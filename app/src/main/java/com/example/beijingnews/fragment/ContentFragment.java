@@ -1,10 +1,13 @@
 package com.example.beijingnews.fragment;
 
 import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.beijingnews.R;
 import com.example.beijingnews.base.BaseFragment;
 import com.example.beijingnews.utils.LogUtil;
 
@@ -13,23 +16,26 @@ import com.example.beijingnews.utils.LogUtil;
  */
 public class ContentFragment extends BaseFragment {
 
-    private TextView textView;
+    private ViewPager viewpager;
+    private RadioGroup rg_main;
+
 
     @Override
     public View initView() {
 
-        LogUtil.e("正文页面被初始化了");
-        textView = new TextView(context);
-        textView.setTextSize(24);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.RED);
-        return textView;
+        LogUtil.e("正文Fragment页面被初始化了");
+        View view = View.inflate(context, R.layout.content_fragment,null);
+        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        rg_main = (RadioGroup) view.findViewById(R.id.rg_main);
+        return view;
     }
 
     @Override
     public void initData() {
         super.initData();
-        LogUtil.e("正文数据被初始化了");
-        textView.setText("正文页面");
+        LogUtil.e("正文Fragment数据被初始化了");
+
+        // configure the default selected radiobutton
+        rg_main.check(R.id.rb_home);
     }
 }
