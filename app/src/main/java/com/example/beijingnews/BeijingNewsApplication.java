@@ -15,6 +15,8 @@ public class BeijingNewsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // init xUtils3
         x.Ext.setDebug(true);
         x.Ext.init(this);
     }

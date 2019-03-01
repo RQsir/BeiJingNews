@@ -21,6 +21,14 @@ public class MainActivity extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // init SlidingMenu
+        initSlidingMenu();
+
+        // init Fragment
+        initFragment();
+    }
+
+    private void initSlidingMenu() {
         // 1.configure main page
         setContentView(R.layout.activity_main);
 
@@ -39,10 +47,6 @@ public class MainActivity extends SlidingFragmentActivity {
 
         // 6.configure the width of the mainPage while sliding
         slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this,200));
-
-
-        // init Fragment
-        initFragment();
     }
 
     private void initFragment() {
@@ -59,5 +63,12 @@ public class MainActivity extends SlidingFragmentActivity {
 
         // 4.commit
         ft.commit();
+    }
+
+    public LeftMenuFragment getLeftMenuFragment() {
+
+        FragmentManager fm = getSupportFragmentManager();
+        LeftMenuFragment leftMenuFragment = (LeftMenuFragment) fm.findFragmentByTag(LEFTMENU_TAG);
+        return leftMenuFragment;
     }
 }
